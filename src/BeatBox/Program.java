@@ -7,8 +7,13 @@ public class Program {
 	
 
 	public static void main(String[] args) {
-		
-		
+		/*MiniMusicPlayer player = new MiniMusicPlayer();
+		player.play();*/
+		MiniMusicPlayer2 player2 = new MiniMusicPlayer2();
+		player2.go();
+		}
+	
+	/*public void generateNote(){
 		int[] arg = new int[2];
 		Scanner kl = new Scanner(System.in);
 		System.out.println("wwed instrument");
@@ -27,7 +32,6 @@ public class Program {
 			
 		mini.play(instrument, note);
 		}
-
 	}
-
+*/
 }

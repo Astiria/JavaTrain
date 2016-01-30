@@ -3,7 +3,6 @@ package BeatBox;
 import javax.sound.midi.*;
 
 public class MiniMusicCmdLine {
-	
 	public static MidiEvent makeEvent(int comd, int chan, int one, int two, int tick){
 		MidiEvent event = null;
 		try{
@@ -15,8 +14,7 @@ public class MiniMusicCmdLine {
 	}
 	
 	
-	
-	public void play(int instrument, int note){
+	/*public void play(int instrument, int note){
 		try {
 			Sequencer player = MidiSystem.getSequencer();
 			player.open();
@@ -50,5 +48,5 @@ public class MiniMusicCmdLine {
 		}
 		
 	}
-
+*/
 }
