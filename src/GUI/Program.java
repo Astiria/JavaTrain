@@ -10,9 +10,12 @@ public class Program {
 		anim.go();*/
 		/*BorderLayTest butTest = new BorderLayTest();
 		butTest.initializationButtons();*/
+		/*FlowLay flow = new FlowLay();
+		flow.drawPanel();*/
+		Components k = new Components();
+		k.playWithKomponents();
 		
-		FlowLay flow = new FlowLay();
-		flow.drawPanel();
+		
 	}
 
 	
