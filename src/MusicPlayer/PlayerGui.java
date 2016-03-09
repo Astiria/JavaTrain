@@ -3,21 +3,18 @@ package MusicPlayer;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
-import MusicPlayer.BeatBox.MyDownTempoListener;
-import MusicPlayer.BeatBox.MyStartListener;
-import MusicPlayer.BeatBox.MyStopListener;
-import MusicPlayer.BeatBox.MyUpTempoListener;
-
-
 public class PlayerGui {
 	
 	private JPanel mainPanel;
-	private ArrayList<JCheckBox> checkBoxList;
+	public ArrayList<JCheckBox> checkBoxList;
 	private JFrame theFrame;
+	MusicPlayer player;
 
 	private String[] instrumentNames = {"Bass Drum", "Closed Hi-Hat", "Open Hi-Hat", "Acoustic Share",
 			"Crash Cymbal", "Hand Clap", "High Tom", "Hi Bongo", "Maracas", "Whistle", "Low Conda",
@@ -29,6 +26,7 @@ public class PlayerGui {
 		BorderLayout layout = new BorderLayout();
 		JPanel background = new JPanel(layout);
 		background.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		player = new MusicPlayer();
 		
 		checkBoxList = new ArrayList<JCheckBox>();
 		Box buttonBox = new Box(BoxLayout.Y_AXIS);
@@ -71,10 +69,39 @@ public class PlayerGui {
 			checkBoxList.add(c);
 			mainPanel.add(c);
 		}
-		setUpMidi();
+		player.setUpMidi();
 		
 		theFrame.setBounds(50,50,300,300);
 		theFrame.pack();
 		theFrame.setVisible(true);
+	}
+	public class MyStartListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			player = new MusicPlayer();
+			player.buildTrackAndStart();
+		}
+	}
+	
+	public class MyStopListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			player = new MusicPlayer();
+			player.sequencer.stop();
+		}
+	}
+	
+	public class MyUpTempoListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			player = new MusicPlayer();
+			float tempoFactor = player.sequencer.getTempoFactor();
+			player.sequencer.setTempoFactor((float)(tempoFactor*1.03));
+		}
+	}
+	
+	public class MyDownTempoListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			player = new MusicPlayer();
+			float tempoFactor = player.sequencer.getTempoFactor();
+			player.sequencer.setTempoFactor((float)(tempoFactor*0.97));
+		}
 	}
 }

@@ -1,79 +1,65 @@
 package MusicPlayer;
 
-import java.awt.*;
 import javax.sound.midi.*;
 import javax.swing.*;
-import java.util.*;
-
 
 public class MusicPlayer {
-	
-	static JFrame f = new JFrame("My clip");
-	static DrawPanel ml;
-	
-	public void setUpGui(){
-		ml = new DrawPanel();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setContentPane(ml);
-		f.setBounds(30, 30, 300, 300);
-		f.setVisible(true);
-	}
-	
-	public void go(){
-		setUpGui();
+	public Sequencer sequencer;
+	Sequence sequence;
+	Track track;
+	PlayerGui gui = new PlayerGui();
+		
+	int[] instruments = {35,42,46,38,49,39,50,60,70,72,64,56,58,47,67,63};
+		
+	public void setUpMidi(){
 		
 		try {
-			Sequencer sequencer = MidiSystem.getSequencer();
+			sequencer = MidiSystem.getSequencer();
 			sequencer.open();
-			sequencer.addControllerEventListener(ml, new int[]{127});
-			Sequence seq = new Sequence(Sequence.PPQ, 4);
-			Track track = seq.createTrack();
-			
-			int r = 0;
-			for(int i =0;i<60;i+=4){
-				r=(int)((Math.random()*50)+1);
-				track.add(EventMaker.makeEvent(144, 1, r, 100, i));
-				track.add(EventMaker.makeEvent(176, 1, 127, 0, i));
-				track.add(EventMaker.makeEvent(128, 1, r, 100, i+2));
-			}
-			sequencer.setSequence(seq);
-			sequencer.start();
+			sequence = new Sequence(Sequence.PPQ, 4);
+			track = sequence.createTrack();
 			sequencer.setTempoInBPM(120);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	public class DrawPanel extends JPanel implements ControllerEventListener{
-		boolean msg = false;
-		
-		public void controlChange(ShortMessage event){
-			msg = true;
-			repaint();
-		}
-		
-		public void paintComponent(Graphics g){
-			if(msg){
-				Graphics2D g2 = (Graphics2D) g;
-				
-				int red = (int)(Math.random()*255);
-				int green = (int)(Math.random()*255);
-				int blue = (int)(Math.random()*255);
-				
-				g.setColor(new Color(red, green, blue));
-				
-				//Generic accidental color and paint rectangle
-				int height = (int)((Math.random()*120)+10);
-				int width = (int)((Math.random()*120)+10);
-				int x = (int)((Math.random()*40)+10);
-				int y = (int)((Math.random()*40)+10);
-				g.fillRect(x, y, height, width);
-				msg = false;
+	
+	public void buildTrackAndStart(){
+		int[] trackList = null;
+		sequence.deleteTrack(track);
+		track = sequence.createTrack();
+		 
+		 for(int i = 0; i<16; i++){
+			 trackList = new int[16];
+			 
+			 int key = instruments[i];
+			 
+			 for(int j = 0; j<16; j++){
+				 JCheckBox jc = (JCheckBox) gui.checkBoxList.get(j+(16*i));
+				 if(jc.isSelected()){
+					 trackList[j] = key;
+				 } 
+				 else {
+					 trackList[j] = 0;
+				 }
+			 }
+			 makeTracks(trackList);
+			 track.add(EventMaker.makeEvent(176,1,127,0,16));
+		 }
+		 track.add(EventMaker.makeEvent(192, 9, 1, 0, 15));
+	}
+	
+	
+	
+	public void makeTracks(int[] list){
+		for(int i = 0; i<16; i++){
+			int key = list[i];
+			
+			if(key!=0){
+				track.add(EventMaker.makeEvent(144, 9, key, 100, i));
+				track.add(EventMaker.makeEvent(128, 9, key, 100, i+1));
 			}
 		}
-		
-
 	}
 
 }
