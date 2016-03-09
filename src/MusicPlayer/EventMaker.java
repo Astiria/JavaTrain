@@ -4,6 +4,7 @@ import javax.sound.midi.*;
 import javax.swing.*;
 
 public class EventMaker {
+	
 	public static MidiEvent makeEvent(int comd, int chan, int one, int two, int tick){
 		MidiEvent event = null;
 		try{
