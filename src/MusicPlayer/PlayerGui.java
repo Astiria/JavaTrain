@@ -77,21 +77,21 @@ public class PlayerGui {
 	}
 	public class MyStartListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			player = new MusicPlayer();
-			player.buildTrackAndStart();
+			//player = new MusicPlayer();
+			player.buildTrackAndStart(PlayerGui.this);
 		}
 	}
 	
 	public class MyStopListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			player = new MusicPlayer();
+			//player = new MusicPlayer();
 			player.sequencer.stop();
 		}
 	}
 	
 	public class MyUpTempoListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			player = new MusicPlayer();
+			//player = new MusicPlayer();
 			float tempoFactor = player.sequencer.getTempoFactor();
 			player.sequencer.setTempoFactor((float)(tempoFactor*1.03));
 		}
@@ -99,7 +99,7 @@ public class PlayerGui {
 	
 	public class MyDownTempoListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			player = new MusicPlayer();
+			//player = new MusicPlayer();
 			float tempoFactor = player.sequencer.getTempoFactor();
 			player.sequencer.setTempoFactor((float)(tempoFactor*0.97));
 		}
