@@ -5,9 +5,16 @@ import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class PlayerGui {
 	
@@ -47,6 +54,18 @@ public class PlayerGui {
 		downTempo.addActionListener(new MyDownTempoListener());
 		buttonBox.add(downTempo);
 		
+		JButton serializ = new JButton("Serializeit");
+		serializ.addActionListener(new MySerializListener());
+		buttonBox.add(serializ);
+		
+		JButton restore = new JButton("Restore");
+		restore.addActionListener(new MyRestoreListener());
+		buttonBox.add(restore);
+		
+		JButton clean = new JButton("Clean");
+		clean.addActionListener(new MyCleanListener());
+		buttonBox.add(clean);
+		
 		Box nameBox = new Box(BoxLayout.Y_AXIS);
 		for(int i = 0; i<16; i++){
 			nameBox.add(new Label(instrumentNames[i]));
@@ -77,21 +96,18 @@ public class PlayerGui {
 	}
 	public class MyStartListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			//player = new MusicPlayer();
 			player.buildTrackAndStart(PlayerGui.this);
 		}
 	}
 	
 	public class MyStopListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			//player = new MusicPlayer();
 			player.sequencer.stop();
 		}
 	}
 	
 	public class MyUpTempoListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			//player = new MusicPlayer();
 			float tempoFactor = player.sequencer.getTempoFactor();
 			player.sequencer.setTempoFactor((float)(tempoFactor*1.03));
 		}
@@ -99,9 +115,69 @@ public class PlayerGui {
 	
 	public class MyDownTempoListener implements ActionListener{
 		public void actionPerformed(ActionEvent a){
-			//player = new MusicPlayer();
 			float tempoFactor = player.sequencer.getTempoFactor();
 			player.sequencer.setTempoFactor((float)(tempoFactor*0.97));
+		}
+	}
+	public class MySerializListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			
+			boolean[] checkboxState = new boolean[256];
+			
+			for(int i = 0; i<256;i++){
+				JCheckBox check = (JCheckBox) checkBoxList.get(i);
+				if(check.isSelected()){
+					checkboxState[i] = true;
+				}
+			}
+			JFileChooser fc = new JFileChooser();
+			if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+			{
+				try {
+			
+				FileOutputStream fileStream = new FileOutputStream(fc.getSelectedFile());
+				ObjectOutputStream os = new ObjectOutputStream(fileStream);
+				os.writeObject(checkboxState);
+				
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		    }
+		}
+	}
+	public class MyRestoreListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+			boolean[] checkboxState = null;
+			JFileChooser fc = new JFileChooser();
+			if(fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+			{
+				try {
+					
+					FileInputStream fileIn = new FileInputStream(fc.getSelectedFile());
+					ObjectInputStream is = new ObjectInputStream(fileIn);
+					checkboxState = (boolean[]) is.readObject();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			for(int i = 0; i<256;i++){
+				JCheckBox check = (JCheckBox) checkBoxList.get(i);
+				if(checkboxState[i]){
+					check.setSelected(true);
+				}
+				else{
+					check.setSelected(false);
+				}
+			}
+		}
+	}
+	public class MyCleanListener implements ActionListener{
+		public void actionPerformed(ActionEvent a){
+				for(int i = 0; i<256; i++){
+				JCheckBox check = (JCheckBox) checkBoxList.get(i);
+				check.setSelected(false);
+			}
 		}
 	}
 }
